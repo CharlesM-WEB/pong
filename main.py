@@ -2,6 +2,7 @@ import sys, pygame
 import random
 import os
 import math
+import random
 os.environ['SDL_AUDIODRIVER'] = 'dsp'
 
 pygame.init()
@@ -22,7 +23,9 @@ paddle2 = pygame.Rect(465,212,15,75)
 ball = pygame.Rect(245,250,10,10)
 
 #creating varibles
-hit = 0
+direction = 0 
+speed = 1
+ball_pos = [225,225]
 
 while True:
     for event in pygame.event.get():
@@ -30,13 +33,16 @@ while True:
             exit()
 
     screen.fill("gray")
-    if hit % 2 == 0:
-        ball.x += 1
-    else:
-        ball.x -= 1
     
-    if ball.colliderect(paddle1) or ball.colliderect(paddle2):
-        hit += 1
+    if ball.colliderect(paddle1):
+        direction += 180
+        height = ball.centery - paddle1.centery
+        direction += height / 2
+    
+    if ball.colliderect(paddle2):
+        direction += 180
+        height = ball.centery - paddle2.centery
+        direction -= height / 2
         
     if pygame.key.get_pressed()[pygame.K_DOWN]:
         paddle2.y+=5
@@ -49,6 +55,15 @@ while True:
         
     if pygame.key.get_pressed()[pygame.K_s]:
         paddle1.y+=5
+        
+    #move the ball
+    x = math.cos(math.radians(direction)) * speed 
+    y = math.sin(math.radians(direction)) * speed
+    
+    ball_pos[0] += x
+    ball_pos[1] += y
+    
+    ball.center = ball_pos
     
     pygame.draw.rect(screen, "white", paddle1)
     pygame.draw.rect(screen, "white", paddle2)
