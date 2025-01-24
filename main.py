@@ -25,17 +25,33 @@ ball = pygame.Rect(245,250,10,10)
 hit = 0
 
 while True:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            exit()
+
     screen.fill("gray")
     if hit % 2 == 0:
-        ball.x += 10
+        ball.x += 1
     else:
-        ball.x -= 10
+        ball.x -= 1
     
     if ball.colliderect(paddle1) or ball.colliderect(paddle2):
         hit += 1
+        
+    if pygame.key.get_pressed()[pygame.K_DOWN]:
+        paddle2.y+=5
+    
+    if pygame.key.get_pressed()[pygame.K_UP]:
+        paddle2.y-=5
+    
+    if pygame.key.get_pressed()[pygame.K_w]:
+        paddle1.y-=5
+        
+    if pygame.key.get_pressed()[pygame.K_s]:
+        paddle1.y+=5
     
     pygame.draw.rect(screen, "white", paddle1)
     pygame.draw.rect(screen, "white", paddle2)
     pygame.draw.circle(screen, "green", ball.center, 5)
     pygame.display.update()
-    clock.tick(10)
+    clock.tick(100)
